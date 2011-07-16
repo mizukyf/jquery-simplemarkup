@@ -1,0 +1,355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	
+	<title>jquery-simplemarkup.js デモ</title>
+	
+	<script type="text/javascript" src="lib/jquery-1.4.3.min.js"></script>
+	<script type="text/javascript" src="lib/ui/jquery-ui-1.8.5.custom.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="lib/ui/themes/ui-lightness/jquery-ui-1.8.5.custom.css" media="screen,tv,print" />
+	<script type="text/javascript" src="../jquery-simplemarkup-1.1.js"></script>
+	<link rel="stylesheet" type="text/css" href="../jquery-simplemarkup-1.0.css" media="screen,tv,print" />
+	<style type="text/css">
+		
+		body{
+			width: 800px;
+			margin: 0 auto;
+			padding: 2em;
+			font-size: 14px;
+			font-family: Arial, Helvetica, Meiryo, sans-serif;
+			line-height: 1.5;
+			color: #333;
+		}
+		div{
+			margin: 1em 0;
+		}
+		em{
+			font-weight: bold;
+			font-style: normal;
+		}
+		p.code{
+			display: block;
+			padding: 1em;
+			border: 1px solid #dcdcdc;
+			background-color: #f5f5f5;
+		}
+		td.code{
+			white-space: nowrap;
+		}
+		.code,
+		code{
+			font-family: "Courier New", Courier, monospace;
+			font-weight: bold;
+			font-style: italic;
+			color: #900;
+		}
+		p code.inline{
+			display: inline;
+		}
+		table,
+		table th,
+		table td{
+			border-collapse: collapse;
+			border: 1px solid #ccc;
+			font-size: 95%;
+		}
+		table th,
+		table td{
+			padding: 1ex;
+		}
+		table th,
+		dl dt{
+			font-weight: bold;
+		}
+
+
+		.smu-button-icon-bold{
+			background-image: url(images/smu-button-icon-bold.png);
+		}
+		.smu-button-icon-italic{
+			background-image: url(images/smu-button-icon-italic.png);
+		}
+		.smu-button-icon-underline{
+			background-image: url(images/smu-button-icon-underline.png);
+		}
+		.smu-button-icon-link{
+			background-image: url(images/smu-button-icon-link.png);
+		}
+		.smu-button-icon-clear{
+			background-image: url(images/smu-button-icon-clear.png);
+		}
+		
+	</style>
+	<script type="text/javascript">
+
+(function($){$(function(){
+	var smu = $('#sample').simpleMarkUp({
+		height: 300,
+		resizeHandle: true,
+		
+		select: function(helper){ /* ... */ },
+		
+		markupSet: [
+			{
+				name: 'bold',
+				label: 'Bold',
+				iconClass: 'smu-button-icon-bold',
+				openWith: '<b>',
+				closeWith: '</b>'
+			},
+			{
+				name: 'italic',
+				label: 'Italic',
+				iconClass: 'smu-button-icon-italic',
+				openWith: '<i>',
+				closeWith: '</i>'
+			},
+			{
+				name: 'underline',
+				label: 'Underline',
+				iconClass: 'smu-button-icon-underline',
+				openWith: '<u>',
+				closeWith: '</u>'
+			},
+			{
+				name: 'link',
+				label: 'Link',
+				iconClass: 'smu-button-icon-link',
+				replaceWith: function(status){
+					var url = window.prompt('Url');
+					return '<a href="'+ (url !== null ? url : '') + '">' + status.selection + '</a>';
+				}
+			},
+			{
+				name: 'clear',
+				label: 'Clear',
+				iconClass: 'smu-button-icon-clear',
+				replaceWith: function(status){
+					return status.selection.replace(/<.+?>/ig, '');
+				}
+			}
+		]
+	}).simpleMarkUp('object');
+	smu.selection(52,9);
+	
+});})(jQuery);
+	
+	</script>
+</head>
+<body>
+
+<h1>jquery-simplemarkup.js</h1>
+<p>
+	jquery-simplemarkup.jsは、TEXTAREA要素内の文字列に対してHTML等のマークアップを施すためのjQueryプラグインです。
+	一応のところ、高機能のマークアップエディターmarkItUp!の低機能なクローン、といったようなものをめざして開発しています。ボタンの作成、コールバック関数による複雑なマークアップ、GUIに頼らずJavaScriptのコードからマークアップを行う機能などを備えています。
+</p>
+<p>
+	基本的に、より大きなアプリケーションへの組み込みを前提に開発をしており、周囲との概観の統一性を高める目的で、jQuery UIプラグインのCSS Frameworkに<em>意図的に</em>依存しています。またmarkItUpでは独自実装されていたテキストエリアのサイズ変更の機能も、同プラグインのResizableに依存しています。
+</p>
+<h2>markItUp!との機能比較</h2>
+<p>
+	実際のところ高機能で簡単に導入できる（WYSIWYGでない）エディターを求めているならば、markItUp!を断然おすすめします。markItUp!にあって、simpleMarkUpにないのは、おおよそ次のような機能です。
+</p>
+<ul>
+	<li>プレビュー機能──JavaScriptアプリへの組み込みを前提とすると不要な機能なのでカット</li>
+	<li>マルチインサート──そもそもこの機能についてはなにも理解していません :-) </li>
+	<li>ポップアップボタン──ポップアップメニューから挿入するタグやその他の何らかの操作を選択させるよりも、ボタンに登録したコールバック関数で、あれこれ（jQueryUIのDialogを表示してユーザーの操作を受け付けるとか）するということのほうが“ありそう”なので、カット</li>
+</ul>
+<p>
+	反対にmarkItUp!になく、simpleMarkUpにあるのは、おおよそ次のような機能です。
+</p>
+<ul>
+	<li>jQuery UIプラグインのテーマとの同調</li>
+	<li>JavaScriptオブジェクトとしての操作が可能</li>
+	<li>ボタンのアイコンを指定するためのCSS記述が簡単。またボタンのラベル表示の有無を選択できる</li>
+	<li>テキストエリアへの操作をブロックできる──これはボタン操作でコールバック関数を呼び出し…というような場面で使うと便利です</li>
+</ul>
+<p>※ちなみにmarkItUp!には公式サイトで、HTMLやBBCodeなどの基本設定＋アイコンをセットにしたものが配布されていますが、simpleMarkUpにはそんな便利なものはありません。設定はすべて自分で書いてもらいます :-) アイコンも100％自己調達です。サンプルでは<a href="http://tango.freedesktop.org/Tango_Desktop_Project" target="_blank">Tangoプロジェクト</a>のアイコンを使用していますが、やはり<a href="http://www.famfamfam.com/lab/icons/silk/" target="_blank">Silkアイコンセット</a>のほうが便利だと思います。</p>
+<h2>サンプル</h2>
+<textarea id="sample">
+	<h3>世界人権宣言前文</h3>
+<blockquote id="UDHR-preamble">
+		<p>人類社会の<em>すべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは、世界における自由、正義及び平和の基礎である</em>ので、</p><p>人権の無視及び軽侮が、人類の良心を踏みにじった野蛮行為をもたらし、言論及び信仰の自由が受けられ、恐怖及び欠乏のない世界の到来が、一般の人々の最高の願望として宣言されたので、</p>
+		<p>		<em>人間が専制と圧迫とに対する最後の手段として反逆に訴えることがないようにするため</em>には、法の支配によって人権保護することが肝要であるので、</p>
+		<p>諸国間の友好関係の発展を促進することが、肝要であるので、</p>
+				<p>国際連合の諸国民は、国際連合憲章において、基本的人権、人間の尊厳及び価値並びに男女の同権についての信念を再確認し、かつ、<em>一層大きな自由のうちで社会的進歩と生活水準の向上とを促進することを決意した</em>ので、</p>
+
+		<p>加盟国は、国際連合と協力して、人権及び基本的自由の普遍的な尊重及び遵守の促進を達成することを誓約したので、</p>
+		<p>これらの権利及び自由に対する共通の理解は、この誓約を完全にするためにもっとも重要であるので、</p>
+		<p>よって、ここに、国際連合総会は、</p>
+	<p>社会の各個人及び各機関が、この世界人権宣言を常に念頭に置きながら、加盟国自身の人民の間にも、また、加盟国の管轄下にある地域の人民の間にも、これらの権利と自由との尊重を指導及び教育によって促進すること並びにそれらの普遍的かつ効果的な承認と尊守とを国内的及び国際的な漸進的措置によって確保することに努力するように、<em>すべての人民とすべての国とが達成すべき共通の基準として</em>、この世界人権宣言を公布する。 </p>
+	</blockquote>
+			<p style="text-align: right;"><cite>（<a href="http://www.mofa.go.jp/Mofaj/gaiko/udhr/1b_001.html">外務省　世界人権宣言（仮訳文）</a>より）</cite></p>
+</textarea>
+
+<h2>イニシアライズ</h2>
+<p><code>
+jQuery( {String} selector ) . simpleMarkUp ( {Object} options )<br />
+jQuery . simpleMarkUp ( {Object} options )
+</code></p>
+<p>1行目の例では、既存のTEXTAREA要素を（selectorで）指定して、simpleMarkUpメソッドを呼び出しています。この方法では、このメソッド呼び出しとともに、simpleMarkUpのUIが表示されます。<br />
+2行目の例では、新規にTEXTAREA要素とsimpleMarkUpのUIを作成します。simpleMarkUpオブジェクトが返されます。このuiメソッドを呼び出すと、simpleMarkUpのUIがjQuery要素として返されます。</p>
+<h2>メソッド</h2>
+<p>
+	jquery.simplemarkup.jsは、jQuery要素としても、simpleMarkUpオブジェクトとしても操作できます（simpleMarkUpオブジェクトとして操作した方が記述量が節約できます）。
+</p>
+<p><code>
+({jQuery} element) . simpleMarkUp ( {String} methodName, { ? } argument0, ... )<br />
+({simpleMarkUp} smu) . methodName ( { ? } argument0, ... )
+</code></p>
+<p>1行目の記述でメソッドを呼び出した場合で、何らかのデータを取り出す操作（ゲッター）でない場合、返り値はjQuery要素になります。2行目の記述でメソッドを呼び出した場合で、何らかのデータを取り出す操作でない場合、返り値はsimpleMarkUpオブジェクトになります。</p>
+<p>以下のメソッド一覧表中、引数の記述は、2行目の記述でメソッドを呼び出した場合のものです。1行目の記述でメソッドを呼び出すには、第1引数としてメソッド名の文字列を指定する必要があります。また表中で、返り値としてsimpleMarkUpを返すメソッドは、1行目の記述で呼び出すとjQuery要素を返します（objectメソッドを除く）。</p>
+
+<table>
+	<thead>
+		<tr>
+			<th>メソッド</th>
+			<th>引数</th>
+			<th>説明</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="code">ui</td>
+			<td class="code"></td>
+			<td>simpleMarkUpのUIをjQuery要素として返します。simpleMarkUpオブジェクトにのみそなわったメソッドです。</td>
+		</tr>
+		<tr>
+			<td class="code">textarea</td>
+			<td class="code"></td>
+			<td>simpleMarkUpの操作対象となっているTEXTAREA要素をjQuery要素のかたちで返します。この要素のsimpleMarkUpメソッドで、simpleMarkUpを操作することもできます（前述）。simpleMarkUpオブジェクトにのみそなわったメソッドです。</td>
+		</tr>
+		<tr>
+			<td class="code">object</td>
+			<td class="code"></td>
+			<td>simpleMarkUpオブジェクトを返します。simpleMarkUpの操作対象となっているTEXTAREA要素（jQuery要素）にのみそなわったメソッドです。</td>
+		</tr>
+		<tr>
+			<td class="code">options</td>
+			<td class="code">{String} optionName,<br />
+			{ ? } optionValue</td>
+			<td>第2引数を指定した場合オプションの変更ができます。このとき返り値はsimpleMarkUpオブジェクトです。第2引数を省略した場合、設定済みの値が返されます。</td>
+		</tr>
+		<tr>
+			<td class="code">val</td>
+			<td class="code">{String} value</td>
+			<td>第1引数を指定した場合、この文字列をTEXTAREA要素の値とします。返り値はsimpleMarkUpオブジェクトです。第1引数を省略した場合、編集中のTEXTAREA要素の値が返されます。</td>
+		</tr>
+		<tr>
+			<td class="code">scroll</td>
+			<td class="code">{Number} pixel</td>
+			<td>TEXTAREA要素をスクロールします。返り値はsimpleMarkUpオブジェクトです。</td>
+		</tr>
+		<tr>
+			<td class="code">markup</td>
+			<td class="code">{Object} setting</td>
+			<td>ボタン操作を介さずTEXTAREA要素内の選択文字列にマークアップを行います。settingオプションの内容は、個々のボタンのオプションと同様です。オプションの項を参照してください。</td>
+		</tr>
+		<tr>
+			<td class="code">selection</td>
+			<td class="code">{Number} start,<br />{Number} length</td>
+			<td>引数を指定して呼び出した場合、TEXTAREA内の文字列を選択します（少なくともWindows版Safari3では、選択範囲が“表示”されませんが、内部的には選択状態になります）。引数を省略した場合、現在TEXTAREA要素内で選択されている文字列の情報を返します。ここで返される情報は、ボタンのオプションとして指定した関数に渡されるstatusオブジェクトと同様です。オプションの項を参照してください。</td>
+		</tr>
+		<tr>
+			<td class="code">block<br />/ unblock</td>
+			<td class="code"></td>
+			<td>TEXTAREA要素への操作をブロックします／ブロックを解除します。</td>
+		</tr>
+
+	</tbody>
+</table>
+
+<h2>オプション</h2>
+
+<table>
+	<thead>
+		<tr>
+			<th>オプション</th>
+			<th>説明</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="code">width<br />/height</td>
+			<td>編集対象のTEXTAREA要素のタテヨコのサイズを指定できます。デフォルトでは、widthは<code class="inline">"auto"</code>、heightは、<code>300</code>です。optionメソッドで後からも変更できます。</td>
+		</tr>
+		<tr>
+			<td class="code">toolbar</td>
+			<td>ツールバーを表示するかどうかをBooleanで指定します。デフォルトでは、<code class="inline">true</code>です。optionメソッドにより後から変更可能です。</td>
+		</tr>
+		<tr>
+			<td class="code">resizeHandle</td>
+			<td>TEXTAREA要素の高さをドラッグにより変更できるようにするかどうかを指定できます。デフォルトでは<code class="inline">true</code>です。jQuery UIプラグインのResizableに依存しています。</td>
+		</tr>
+		<tr>
+			<td class="code">select</td>
+			<td>
+				<p>TEXTAREA要素内で文字列の選択もしくはキャレット（カーソル）の移動があった場合に呼び出されます。第1引数には選択範囲に関する情報をまとめたオブジェクトが、第2引数にはイベントオブジェクトが渡されます。ただしこのオブジェクトを調べればわかるとおり、実際にはこのイベントオブジェクトはselectイベントではなくmouseupイベントのものです。これはブラウザ間での動作の標準化のために、mouseupイベントを選択範囲の情報を取得するトリガーとして利用しているためです。</p>
+				<p>第1引数のオブジェクトには以下のようなプロパティがあります。</p>
+				<dl>
+					<dt class="code">caretPosition</dt>
+					<dd>キャレットの位置を示す数値</dd>
+					<dt class="code">scrollPosition</dt>
+					<dd>TEXTAREA要素のスクロール位置を示す数値</dd>
+					<dt class="code">selection</dt>
+					<dd>選択されている文字列</dd>
+					<dt class="code">textarea</dt>
+					<dd>DOM要素としてのTEXTAREA要素</dd>
+				</dl>
+				<p>以上がmarkItUp!と共通のプロパティです。そして以下がsimpleMarkUpで追加したプロパティです。</p>
+				<dl>
+					<dt class="code">fulltext</dt>
+					<dd>TEXTAREA要素の値である文字列全体</dd>
+					<dt class="code">start</dt>
+					<dd>選択範囲の開始位置を示す数値</dd>
+					<dt class="code">end</dt>
+					<dd>選択範囲の終了位置を示す数値（正確には終了位置の文字とその右隣の文字との境界の位置を示す数値です。sliceやsubstring等の文字列メソッドを思い出してください）</dd>
+					<dt class="code">before</dt>
+					<dd>選択範囲の前の文字列すべて</dd>
+					<dt class="code">after</dt>
+					<dd>選択範囲の後の文字列すべて</dd>
+				</dl>
+			
+			</td>
+		</tr>
+		<tr>
+			<td class="code">markupSet</td>
+			<td>
+				<p>
+					ボタンを定義するオブジェクトの配列です。配列の要素がない場合（配列の長さが<code class="inline">0</code>）、ツールバーは表示されません。オプションメソッドで後から変更できます。なお、この配列の要素のオブジェクトの書式は、markupメソッドの引数として渡すオブジェクトと共通です。コールバック関数に渡される情報もおおむね同じです。
+				</p>
+				<dl>
+					<dt class="code">name</dt>
+					<dd>ボタンの名前です。それ以上の意味はありません</dd>
+					<dt class="code">label</dt>
+					<dd>ボタンの右に表示されるラベルを指定できます。指定しなければ表示もされません。</dd>
+					<dt class="code">className</dt>
+					<dd>ボタンの要素に付加されるクラス属性です。</dd>
+					<dt class="code">iconClass</dt>
+					<dd>ボタンのアイコン部分に付加されるクラス属性を指定します。このクラス名を使って、CSSの<code class="inline">background-image</code>プロパティでアイコンの画像などを指定します。</dd>
+					<dt class="code">openWith</dt>
+					<dd>ボタンが押されたときに、選択中の文字列の前に挿入される文字列、もしくはその文字列を返す何らかの関数を指定できます。</dd>
+					<dt class="code">closeWith</dt>
+					<dd>ボタンが押されたときに、選択中の文字列の後に挿入される文字列、もしくはその文字列を返す何らかの関数を指定できます。</dd>
+					<dt class="code">replaceWith</dt>
+					<dd>ボタンが押されたときに、選択中の文字列を置換する文字列、もしくはその文字列を返す何らかの関数を指定できます。</dd>
+					<dt class="code">placeHolder</dt>
+					<dd>ボタンが押されたときに、選択範囲の長さが0（つまり選択範囲はなく、ただキャレットが表示されている状態）のとき、キャレットの位置に挿入される文字列を指定できます。</dd>
+					<dt class="code">beforeInsert</dt>
+					<dd>ボタンが押されたとき、文字列の挿入が行われる前に呼び出される関数を指定できます。この関数が<code class="inline">false</code>を返すと、以後の処理（文字列の挿入）は実施されません。選択範囲はそのままです。</dd>
+					<dt class="code">afterInsert</dt>
+					<dd>ボタンが押されたとき、文字列の挿入が行われた後に呼び出される関数を指定できます。</dd>
+				</dl>
+				<p><code class="inline">openWith</code>や<code class="inline">closeWith</code>、<code class="inline">replaceWith</code>、<code class="inline">beforeInsert</code>、<code class="inline">afterInsert</code>などの関数には共通の引数が渡されます。引数は上記のボタンについての全情報と、selectオプションの項で紹介した選択範囲に関する情報をまとめたオブジェクトです。また関数内では<code class="inline">this</code>は、simpleMarkUpオブジェクトを指します。</p>
+				<p>※たとえば、beforeInsertとして指定した関数のなかで、<code class="inline">this.block()</code>を実行し、TEXTAREAに対する操作を遮断し、何らかの複雑な処理──選択中の文字列にほどこすタグについての情報を入力させるためのダイアログを表示するとか──を実施し、<code class="inline">false</code>を返して、simpleMarkUpの文字列挿入処理を中段しつつ選択範囲はそのまま維持する、というようなことが考えられます。</p>
+			</td>
+		</tr>
+
+	</tbody>
+</table>
+
+</body>
+</html>

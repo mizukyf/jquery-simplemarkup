@@ -1,0 +1,58 @@
+
+.smu-container{
+	position: relative;
+	margin: 0;
+	padding: .5ex;
+}
+.smu-container .smu-toolbar{
+	position: relative;
+	margin: 0 0 .5ex;
+	padding: 0;
+}
+.smu-container .smu-toolbar ul{
+	margin: 0;
+	padding: 0;
+}
+.smu-container .smu-canvas{
+	position: relative;
+	height: 300px;
+	padding: 0;
+	margin: 0;
+}
+.smu-container .smu-canvas textarea{
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	border-width: 0;
+	background-color: #fff;
+	z-index: 1;
+}
+.smu-container .smu-toolbar ul .smu-button{
+	float: left;
+	padding: 0 .5ex 0 0;
+	margin: 0 .5ex 0 0;
+	height: 22px;
+	list-style-type: none;
+}
+.smu-container .smu-toolbar ul .smu-button .smu-button-icon{
+	float: left;
+	height: 22px;
+	width: 22px;
+	margin: 0;
+	padding: 0;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+.smu-container .smu-toolbar ul .smu-button .smu-button-label{
+	float: left;
+	height: 22px;
+	margin: 0;
+	padding: 0;
+	line-height: 22px;
+	font-size: 12px;
+}
